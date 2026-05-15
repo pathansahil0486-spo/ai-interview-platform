@@ -36,8 +36,7 @@ export async function generatePersonalizedInterviewQuestions({
   targetRoles = [],     // ← NEW: ['Senior Frontend Dev', 'Tech Lead']
   goals = []            // ← NEW: ['Get first job', 'Crack FAANG']
 }) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
-
+ const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
   const contextBlock = profileContext || (
     userType === 'student'
       ? `The candidate is a student in class/level "${studentClass}", studying "${stream}".
@@ -145,7 +144,7 @@ export async function analyzeInterviewAnswer({
     };
   }
 
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+ const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const prompt = `You are an expert interviewer evaluating a candidate's interview answer.
 
@@ -219,7 +218,7 @@ export async function generateInterviewSummary({
   questionsAndAnswers = [],
   questionScores = []
 }) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const avgScore = questionScores.length > 0
     ? Math.round(questionScores.reduce((a, b) => a + b, 0) / questionScores.length)
@@ -289,7 +288,7 @@ export async function generatePreparationContent({
   experienceLevel,
   domain
 }) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const prompt = `You are a world-class interview coach. Create a focused preparation guide.
 
@@ -323,7 +322,7 @@ export async function generateAssessmentQuestions({
   experienceLevel = 'intermediate',
   questionTypes = ['mcq', 'short_answer']
 }) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const prompt = `You are an expert assessment designer. Create a ${difficulty}-difficulty assessment.
 
@@ -416,7 +415,7 @@ export async function evaluateAssessmentAnswer({
   }
 
   // Short answer / coding: Gemini grading
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const prompt = `You are evaluating a student's assessment answer.
 
@@ -477,7 +476,7 @@ export async function generateAssessmentFeedback({
   weakTopics = []
 }) {
   const percentage = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const summaryLines = answeredQuestions
     .slice(0, 10)
