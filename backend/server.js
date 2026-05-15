@@ -128,7 +128,7 @@ ${c.bCyan}${c.bold}         InterviewAI  —  API Server v2.0.0${c.reset}
   console.log(`  ${c.dim}│${c.reset}  ${c.bGreen}◉${c.reset}  ${c.bold}Server  ${c.reset}  ${c.bWhite}http://localhost:${port}${' '.repeat(20 - String(port).length)}${c.reset}${c.dim}│${c.reset}`);
   console.log(`  ${c.dim}│${c.reset}  ${c.bGreen}◉${c.reset}  ${c.bold}Health  ${c.reset}  ${c.bWhite}http://localhost:${port}/api/health${' '.repeat(8 - String(port).length)}${c.reset}${c.dim}│${c.reset}`);
   console.log(`  ${c.dim}│${c.reset}  ${c.bYellow}◉${c.reset}  ${c.bold}Gemini  ${c.reset}  ${process.env.GEMINI_API_KEY    ? `${c.bGreen}✔  Enabled${c.reset}` : `${c.bRed}✘  Missing GEMINI_API_KEY${c.reset}`}${' '.repeat(process.env.GEMINI_API_KEY ? 28 : 14)}${c.dim}│${c.reset}`);
-  console.log(`  ${c.dim}│${c.reset}  ${c.bBlue}◉${c.reset}  ${c.bold}Claude  ${c.reset}  ${process.env.ANTHROPIC_API_KEY ? `${c.bGreen}✔  Enabled${c.reset}` : `${c.bRed}✘  Missing ANTHROPIC_API_KEY${c.reset}`}${' '.repeat(process.env.ANTHROPIC_API_KEY ? 28 : 11)}${c.dim}│${c.reset}`);
+ console.log(`  ${c.dim}│${c.reset}  ${c.bYellow}◉${c.reset}  ${c.bold}Groq    ${c.reset}  ${process.env.GROQ_API_KEY ? `${c.bGreen}✔  Enabled${c.reset}` : `${c.bRed}✘  Missing GROQ_API_KEY${c.reset}`}${' '.repeat(process.env.GROQ_API_KEY ? 28 : 17)}${c.dim}│${c.reset}`);
   console.log(`  ${c.dim}│${c.reset}  ${c.bMagenta}◉${c.reset}  ${c.bold}Mode    ${c.reset}  ${c.bWhite}${(process.env.NODE_ENV || 'development').padEnd(36)}${c.reset}${c.dim}│${c.reset}`);
   console.log(`  ${line}\n`);
 };

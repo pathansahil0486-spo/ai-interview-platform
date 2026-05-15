@@ -1,11 +1,12 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
+import Groq from 'groq-sdk';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '' });
 
-// Safely parse JSON from Gemini response (strips markdown fences)
+const MODEL = 'llama-3.3-70b-versatile';
+
+// Safely parse JSON from response (strips markdown fences)
 function safeParseJSON(text) {
   try {
     const clean = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
@@ -17,6 +18,16 @@ function safeParseJSON(text) {
     if (objMatch) { try { return JSON.parse(objMatch[0]); } catch {} }
     return null;
   }
+}
+
+async function callGroq(prompt, maxTokens = 2000) {
+  const completion = await groq.chat.completions.create({
+    model: MODEL,
+    messages: [{ role: 'user', content: prompt }],
+    max_tokens: maxTokens,
+    temperature: 0.7,
+  });
+  return completion.choices[0].message.content;
 }
 
 // ── 1. Generate personalised interview questions ─────────────────────────────
@@ -31,12 +42,11 @@ export async function generatePersonalizedInterviewQuestions({
   studentClass = '',
   stream = '',
   jobDescription = '',
-  profileContext = '',  // ← NEW: pre-built rich context from interviews.js
-  skills = [],          // ← NEW: ['React', 'Node.js', 'Python']
-  targetRoles = [],     // ← NEW: ['Senior Frontend Dev', 'Tech Lead']
-  goals = []            // ← NEW: ['Get first job', 'Crack FAANG']
+  profileContext = '',
+  skills = [],
+  targetRoles = [],
+  goals = []
 }) {
- const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
   const contextBlock = profileContext || (
     userType === 'student'
       ? `The candidate is a student in class/level "${studentClass}", studying "${stream}".
@@ -47,11 +57,11 @@ export async function generatePersonalizedInterviewQuestions({
          ${jobDescription ? `Job description: ${jobDescription.slice(0, 400)}` : ''}`
   );
 
- const skillsDirective = !profileContext && skills.length > 0
-  ? `\nCRITICAL: The candidate listed these specific skills: ${skills.join(', ')}.
+  const skillsDirective = !profileContext && skills.length > 0
+    ? `\nCRITICAL: The candidate listed these specific skills: ${skills.join(', ')}.
 At least ${Math.ceil(numQuestions * 0.5)} questions MUST directly test these specific technologies.
 Do NOT ask generic questions. React listed → ask about React. Python listed → ask Python questions.`
-  : '';
+    : '';
 
   const rolesDirective = targetRoles.length > 0
     ? `\nTarget roles: ${targetRoles.join(', ')}. Frame questions around what these roles require.` : '';
@@ -62,7 +72,6 @@ Do NOT ask generic questions. React listed → ask about React. Python listed �
   const goalsDirective = goals.length > 0
     ? `\nCandidate's goals: ${goals.join(', ')}. Tailor behavioural questions to these.` : '';
 
-  // ✅ FIX 1: 'situational' removed from mixed description
   const typeGuide = {
     technical: 'All questions test technical knowledge, coding, or domain expertise specific to their listed skills.',
     behavioral: 'All questions use real STAR-format scenarios relevant to their experience and domain.',
@@ -109,18 +118,17 @@ Respond ONLY with a valid JSON array. No markdown, no preamble:
   }
 ]`;
 
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
+  const text = await callGroq(prompt, 3000);
   const parsed = safeParseJSON(text);
 
   if (!Array.isArray(parsed) || parsed.length === 0) {
-    throw new Error('Gemini returned invalid question data');
+    throw new Error('Groq returned invalid question data');
   }
 
   return parsed.slice(0, numQuestions);
 }
 
-// ── 2. Analyse a single answer with Gemini ───────────────────────────────────
+// ── 2. Analyse a single answer ───────────────────────────────────────────────
 export async function analyzeInterviewAnswer({
   question,
   idealAnswer,
@@ -143,8 +151,6 @@ export async function analyzeInterviewAnswer({
       technicalScore: 0
     };
   }
-
- const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const prompt = `You are an expert interviewer evaluating a candidate's interview answer.
 
@@ -177,8 +183,7 @@ Respond ONLY with a valid JSON object:
 }`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = await callGroq(prompt, 1000);
     const parsed = safeParseJSON(text);
 
     if (!parsed || typeof parsed.score !== 'number') throw new Error('Invalid analysis response');
@@ -218,8 +223,6 @@ export async function generateInterviewSummary({
   questionsAndAnswers = [],
   questionScores = []
 }) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-
   const avgScore = questionScores.length > 0
     ? Math.round(questionScores.reduce((a, b) => a + b, 0) / questionScores.length)
     : 0;
@@ -257,8 +260,7 @@ Respond ONLY with valid JSON:
 }`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = await callGroq(prompt, 1500);
     const parsed = safeParseJSON(text);
     if (!parsed || typeof parsed.overallScore !== 'number') throw new Error('Invalid summary');
     return parsed;
@@ -288,8 +290,6 @@ export async function generatePreparationContent({
   experienceLevel,
   domain
 }) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-
   const prompt = `You are a world-class interview coach. Create a focused preparation guide.
 
 TOPIC: "${topic}"
@@ -307,8 +307,7 @@ Respond ONLY with valid JSON:
   "estimatedPrepTime": "X hours"
 }`;
 
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
+  const text = await callGroq(prompt, 1000);
   return safeParseJSON(text) || {};
 }
 
@@ -322,8 +321,6 @@ export async function generateAssessmentQuestions({
   experienceLevel = 'intermediate',
   questionTypes = ['mcq', 'short_answer']
 }) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-
   const prompt = `You are an expert assessment designer. Create a ${difficulty}-difficulty assessment.
 
 TOPIC: "${topic}"
@@ -355,8 +352,7 @@ Rules:
 - For mcq: always provide exactly 4 options`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const text = await callGroq(prompt, 2500);
     const parsed = safeParseJSON(text);
     if (!Array.isArray(parsed) || parsed.length === 0) throw new Error('Invalid assessment questions');
     return parsed.slice(0, numQuestions);
@@ -401,7 +397,6 @@ export async function evaluateAssessmentAnswer({
     const normalize = (s) => (s || '').toString().trim().toLowerCase();
     const ua = normalize(userAnswer);
     const ca = normalize(correctAnswer);
-    // Match full string OR just the leading letter (e.g. "a" vs "a) option text")
     const isCorrect = ua === ca || ua.charAt(0) === ca.charAt(0);
     return {
       pointsEarned: isCorrect ? points : 0,
@@ -414,9 +409,7 @@ export async function evaluateAssessmentAnswer({
     };
   }
 
-  // Short answer / coding: Gemini grading
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-
+  // Short answer / coding: Groq grading
   const prompt = `You are evaluating a student's assessment answer.
 
 TOPIC: ${topic || 'General'}
@@ -438,8 +431,8 @@ Respond ONLY with valid JSON:
 }`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const parsed = safeParseJSON(result.response.text());
+    const text = await callGroq(prompt, 500);
+    const parsed = safeParseJSON(text);
     if (!parsed || typeof parsed.pointsEarned !== 'number') throw new Error('Invalid evaluation');
     return {
       pointsEarned: Math.max(0, Math.min(points, parsed.pointsEarned)),
@@ -450,7 +443,6 @@ Respond ONLY with valid JSON:
     };
   } catch (err) {
     console.error('evaluateAssessmentAnswer error:', err.message);
-    // Keyword-match fallback
     const aWords = userAnswer.toLowerCase().split(/\s+/);
     const cWords = correctAnswer.toLowerCase().split(/\s+/);
     const matches = aWords.filter(w => cWords.includes(w) && w.length > 3).length;
@@ -476,7 +468,6 @@ export async function generateAssessmentFeedback({
   weakTopics = []
 }) {
   const percentage = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const summaryLines = answeredQuestions
     .slice(0, 10)
@@ -507,8 +498,8 @@ Respond ONLY with valid JSON:
 }`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const parsed = safeParseJSON(result.response.text());
+    const text = await callGroq(prompt, 1000);
+    const parsed = safeParseJSON(text);
     if (!parsed) throw new Error('Invalid feedback');
     return parsed;
   } catch (err) {
