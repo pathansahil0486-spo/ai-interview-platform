@@ -155,7 +155,7 @@ function Footer() {
                   boxShadow: "0 2px 10px rgba(91,62,245,.12)",
                   overflow: "hidden", flexShrink: 0,
                 }}>
-                  <img src="/logop.png" alt="SMART InterviewAi Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src="/logo-new.png" alt="SMART InterviewAi Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
                   <span style={{
@@ -273,7 +273,7 @@ function Footer() {
           {/* Brand row */}
           <div style={{ padding: "18px 16px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1.5px solid #ece9f8" }}>
             <Link to="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
-              <img src="/logop.png" alt="SMART InterviewAi Logo" style={{ width: 32, height: 32, borderRadius: 9, objectFit: "contain", boxShadow: "0 2px 8px rgba(91,62,245,.18)" }} />
+            <img src="/logo-new.png" alt="SMART InterviewAi Logo" style={{ width: 32, height: 32, borderRadius: 8, objectFit: "cover" }} />
               <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
                 <span style={{
                   fontWeight: 800, fontSize: 13, letterSpacing: "-0.2px",

@@ -151,7 +151,7 @@ function DesktopNav({ navLinks, isActive }) {
           overflow: "hidden", flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
         }}>
-          <img src="/logop.png" alt="SMART InterviewAi Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <img src="/logo-new.png" alt="SMART InterviewAi Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
           <span style={{
@@ -205,7 +205,7 @@ function MobileHeader({ isMobileMenuOpen, toggleMobileMenu, closeMobileMenu }) {
       </button>
 
       <Link to="/" onClick={closeMobileMenu} style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", marginLeft: 8, marginRight: "auto" }}>
-        <img src="/logop.png" alt="SMART InterviewAi Logo" style={{ width: 30, height: 30, borderRadius: 8, objectFit: "contain", boxShadow: "0 2px 8px rgba(91,62,245,.18)" }} />
+       <img src="/logo-new.png" alt="SMART InterviewAi Logo" style={{ width: 30, height: 30, borderRadius: 8, objectFit: "cover" }} />
         <span style={{
           fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: 14, letterSpacing: "-0.2px",
           background: "linear-gradient(90deg,#5b3ef5,#a855f7,#ec4899)",
