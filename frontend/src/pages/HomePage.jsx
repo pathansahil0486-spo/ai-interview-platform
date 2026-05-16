@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { SignInButton } from "@clerk/clerk-react";
+import { SignInButton, useAuth, useClerk } from "@clerk/clerk-react";
 import {
   Sparkles, Target, Zap, Shield, Users, TrendingUp, CheckCircle,
   ArrowRight, Brain, MessageSquare, BarChart, GraduationCap,
@@ -70,7 +70,7 @@ const GLOBAL_STYLES = `
   .hp-footer-link {
     font-size: 13.5px; font-weight: 500; color: #6b6880;
     text-decoration: none; display: flex; align-items: center; gap: 6px;
-    transition: color .15s;
+    transition: color .15s; background: none; border: none; cursor: pointer; padding: 0;
   }
   .hp-footer-link:hover { color: #5b3ef5; }
 
@@ -162,6 +162,9 @@ const GLOBAL_STYLES = `
   .hp-hamburger.open span:nth-child(2) { opacity: 0; }
   .hp-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 `;
+
+/* ── Protected paths ── */
+const PROTECTED = ["/dashboard", "/interviews", "/syllabus", "/preparation", "/profile"];
 
 /* ─── Helpers ─── */
 function getInitials(name = "") {
@@ -268,7 +271,7 @@ function HomeNav() {
             </SignInButton>
           </div>
 
-          {/* Mobile: CTA + hamburger */}
+          {/* Mobile: hamburger */}
           <div className="hp-mobile-only" style={{ alignItems: "center", gap: 10 }}>
             <button
               className={`hp-hamburger${menuOpen ? " open" : ""}`}
@@ -683,46 +686,64 @@ function CTASection() {
 /* ─── FOOTER ─── */
 function HomeFooter() {
   const year = new Date().getFullYear();
+  const { isSignedIn } = useAuth();
+  const { openSignIn } = useClerk();
+
+  /* Smart anchor: public → normal href, protected + logged-out → Clerk modal */
+  function FooterLink({ path, className, style, children }) {
+    const needsAuth = PROTECTED.includes(path);
+    if (needsAuth && !isSignedIn) {
+      return (
+        <button onClick={() => openSignIn()} className={className} style={style}>
+          {children}
+        </button>
+      );
+    }
+    return <a href={path} className={className} style={style}>{children}</a>;
+  }
 
   const navLinks = [
-    { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { path: "/interviews", icon: UserCheck, label: "Interviews" },
-    { path: "/syllabus", icon: BookMarked, label: "Syllabus" },
-    { path: "/preparation", icon: BookOpen, label: "Preparation" },
+    { path: "/dashboard",   icon: LayoutDashboard, label: "Dashboard"   },
+    { path: "/interviews",  icon: UserCheck,        label: "Interviews"  },
+    { path: "/syllabus",    icon: BookMarked,       label: "Syllabus"    },
+    { path: "/preparation", icon: BookOpen,         label: "Preparation" },
   ];
 
   const resourceLinks = [
-    { path: "/preparation", label: "Prep Hub" },
-    { path: "/syllabus", label: "Syllabus" },
-    { path: "/interviews", label: "Mock Interviews" },
-    { path: "/dashboard", label: "Dashboard" },
+    { path: "/preparation", label: "Prep Hub"        },
+    { path: "/syllabus",    label: "Syllabus"        },
+    { path: "/interviews",  label: "Mock Interviews" },
+    { path: "/dashboard",   label: "Dashboard"       },
   ];
 
   const companyLinks = [
-    { path: "/about", label: "About Us" },
-    { path: "/contact", label: "Contact" },
-    { path: "/profile", label: "My Profile" },
+    { path: "/about",    label: "About Us"   },
+    { path: "/contact",  label: "Contact"    },
+    { path: "/profile",  label: "My Profile" },
   ];
 
   const legalLinks = [
-    { path: "/privacy", label: "Privacy Policy", icon: Shield },
-    { path: "/terms", label: "Terms of Use", icon: FileText },
-    { path: "/help", label: "Help Center", icon: HelpCircle },
+    { path: "/privacy", label: "Privacy Policy", icon: Shield    },
+    { path: "/terms",   label: "Terms of Use",   icon: FileText  },
+    { path: "/help",    label: "Help Center",    icon: HelpCircle },
+    {path: "/feedback", label: "Feedback",       icon: MessageSquare },
   ];
 
   const socialLinks = [
-    { href: "https://twitter.com", Icon: Twitter, label: "Twitter" },
+    { href: "https://twitter.com",  Icon: Twitter,  label: "Twitter"  },
     { href: "https://linkedin.com", Icon: Linkedin, label: "LinkedIn" },
-    { href: "https://github.com", Icon: Github, label: "GitHub" },
-    { href: "https://youtube.com", Icon: Youtube, label: "YouTube" },
+    { href: "https://github.com",   Icon: Github,   label: "GitHub"   },
+    { href: "https://youtube.com",  Icon: Youtube,  label: "YouTube"  },
   ];
 
   return (
     <footer style={{ background: "#fff", borderTop: "1.5px solid #ece9f8", boxShadow: "0 -2px 20px rgba(91,62,245,.04)" }}>
 
-      {/* Desktop footer */}
+      {/* ══ DESKTOP ══ */}
       <div className="hp-desktop-only" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", display: "block" }}>
         <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1.2fr", gap: 40, padding: "52px 0 44px" }}>
+
+          {/* Brand */}
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", width: "fit-content" }}>
               <div style={{ width: 44, height: 44, borderRadius: 12, border: "1.5px solid #ece9f8", overflow: "hidden", boxShadow: "0 2px 10px rgba(91,62,245,.12)" }}>
@@ -751,32 +772,39 @@ function HomeFooter() {
             </div>
           </div>
 
+          {/* Quick Links */}
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", color: "#0f0e17" }}>Quick Links</p>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
               {resourceLinks.map(({ path, label }) => (
-                <li key={path}><a href={path} className="hp-footer-link">{label}</a></li>
+                <li key={path}>
+                  <FooterLink path={path} className="hp-footer-link">{label}</FooterLink>
+                </li>
               ))}
             </ul>
           </div>
 
+          {/* Company */}
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", color: "#0f0e17" }}>Company</p>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
               {companyLinks.map(({ path, label }) => (
-                <li key={path}><a href={path} className="hp-footer-link">{label}</a></li>
+                <li key={path}>
+                  <FooterLink path={path} className="hp-footer-link">{label}</FooterLink>
+                </li>
               ))}
             </ul>
           </div>
 
+          {/* Legal & Support */}
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase", color: "#0f0e17" }}>Legal &amp; Support</p>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
               {legalLinks.map(({ path, label, icon: Icon }) => (
                 <li key={path}>
-                  <a href={path} className="hp-footer-link">
+                  <FooterLink path={path} className="hp-footer-link">
                     <Icon style={{ width: 13, height: 13, color: "#9d96c8" }} /> {label}
-                  </a>
+                  </FooterLink>
                 </li>
               ))}
             </ul>
@@ -797,7 +825,7 @@ function HomeFooter() {
         </div>
       </div>
 
-      {/* Mobile footer */}
+      {/* ══ MOBILE ══ */}
       <div className="hp-mobile-only" style={{ flexDirection: "column" }}>
         <div style={{ padding: "18px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1.5px solid #ece9f8" }}>
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
@@ -818,9 +846,10 @@ function HomeFooter() {
           </div>
         </div>
 
+        {/* Nav pills */}
         <div style={{ padding: "14px 16px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
           {navLinks.map(({ path, icon: NavIcon, label }) => (
-            <a key={path} href={path} style={{
+            <FooterLink key={path} path={path} style={{
               display: "flex", alignItems: "center", gap: 7,
               padding: "9px 14px", borderRadius: 10,
               fontSize: 12.5, fontWeight: 600, textDecoration: "none",
@@ -828,13 +857,16 @@ function HomeFooter() {
             }}>
               <NavIcon style={{ width: 14, height: 14, flexShrink: 0 }} />
               {label}
-            </a>
+            </FooterLink>
           ))}
         </div>
 
+        {/* Legal links */}
         <div style={{ padding: "10px 16px", borderTop: "1.5px solid #ece9f8", display: "flex", flexWrap: "wrap", gap: "6px 16px" }}>
           {legalLinks.map(({ path, label }) => (
-            <a key={path} href={path} style={{ fontSize: 11, fontWeight: 600, color: "#6b6880", textDecoration: "none" }}>{label}</a>
+            <FooterLink key={path} path={path} style={{ fontSize: 11, fontWeight: 600, color: "#6b6880", textDecoration: "none" }}>
+              {label}
+            </FooterLink>
           ))}
         </div>
 

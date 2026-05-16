@@ -5,7 +5,7 @@ import {
   GraduationCap, Briefcase, Brain, ChevronRight,
   Star, Rocket, Heart, Code, Globe, Award
 } from "lucide-react";
-import Navbar from "../components/Navbar";
+import HomeNav from "../components/HomeNav";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -146,7 +146,7 @@ export default function AboutPage() {
     <>
       <style>{ABOUT_STYLES}</style>
       <div className="about-page">
-        <Navbar />
+       <HomeNav />
         <main style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 20px 80px" }}>
 
           {/* ── Hero ── */}

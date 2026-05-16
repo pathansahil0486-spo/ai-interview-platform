@@ -6,7 +6,7 @@ import {
   Shield, GraduationCap, Briefcase, BarChart3,
   RefreshCw, Copy, CheckCheck, Target
 } from "lucide-react";
-import Navbar from "../components/Navbar";
+import HomeNav from "../components/HomeNav";
 
 const HELP_STYLES = `
   .help-page * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
@@ -250,7 +250,7 @@ export default function HelpPage() {
     <>
       <style>{HELP_STYLES}</style>
       <div className="help-page">
-        <Navbar />
+        <HomeNav />
         <main style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 20px 80px" }}>
 
           {/* ── Hero ── */}

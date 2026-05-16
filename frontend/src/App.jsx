@@ -73,12 +73,12 @@ function App() {
   };
 
   // Public pages that still get the footer
-  const PublicRoute = ({ children }) => (
-    <div className="flex flex-col min-h-screen">
-      <div className="flex-1">{children}</div>
-      <Footer />
-    </div>
-  );
+ const PublicRoute = ({ children }) => (
+  <div className="flex flex-col min-h-screen">
+    <div className="flex-1" style={{ paddingTop: 64 }}>{children}</div>
+    <Footer />
+  </div>
+);
 
   return (
     <>

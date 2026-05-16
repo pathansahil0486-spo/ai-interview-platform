@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router";
+import { useAuth, useClerk } from "@clerk/clerk-react";
 import {
   LayoutDashboardIcon,
   UserCheckIcon,
@@ -24,6 +25,7 @@ const FOOTER_STYLES = `
     display: flex; align-items: center; gap: 6px;
     font-size: 13.5px; font-weight: 500; color: #4b4869;
     text-decoration: none; transition: color .15s;
+    background: none; border: none; cursor: pointer; padding: 0; width: 100%;
   }
   .f-link:hover { color: #5b3ef5; }
   .f-link.active { color: #5b3ef5; }
@@ -48,6 +50,7 @@ const FOOTER_STYLES = `
     padding: 9px 14px; border-radius: 10px;
     font-size: 12.5px; font-weight: 600; text-decoration: none;
     transition: background .15s, color .15s;
+    background: none; border: none; cursor: pointer; width: 100%;
   }
   .f-nav-pill.active { background: #5b3ef5; color: #fff; box-shadow: 0 4px 14px rgba(91,62,245,.3); }
   .f-nav-pill:not(.active) { background: #f0eeff; color: #5b3ef5; }
@@ -55,15 +58,42 @@ const FOOTER_STYLES = `
 
   .f-bottom-link {
     font-size: 12px; font-weight: 600; text-decoration: none; color: #6b6880;
-    transition: color .15s;
+    transition: color .15s; background: none; border: none; cursor: pointer; padding: 0;
   }
   .f-bottom-link:hover { color: #5b3ef5; }
   .f-bottom-link.active { color: #5b3ef5; }
 `;
 
+/* ── Protected paths — sign-in required ── */
+const PROTECTED = ["/dashboard", "/interviews", "/syllabus", "/preparation", "/profile"];
+
 function Footer() {
   const location = useLocation();
+  const { isSignedIn } = useAuth();
+  const { openSignIn } = useClerk();
+
   const isActive = (path) => location.pathname === path;
+
+  /* Smart link: public → React Router Link, protected + logged-out → openSignIn modal */
+  function NavLink({ to, className, style, children }) {
+    const needsAuth = PROTECTED.includes(to);
+    if (needsAuth && !isSignedIn) {
+      return (
+        <button
+          onClick={() => openSignIn()}
+          className={className}
+          style={style}
+        >
+          {children}
+        </button>
+      );
+    }
+    return (
+      <Link to={to} className={className} style={style}>
+        {children}
+      </Link>
+    );
+  }
 
   const navLinks = [
     { path: "/dashboard",   icon: LayoutDashboardIcon, label: "Dashboard"   },
@@ -86,10 +116,10 @@ function Footer() {
   ];
 
   const legalLinks = [
-    { path: "/privacy",  label: "Privacy Policy", icon: Shield       },
-    { path: "/terms",    label: "Terms of Use",   icon: FileText     },
-    { path: "/help",     label: "Help Center",    icon: HelpCircle   },
-    { path: "/feedback", label: "Feedback",       icon: MessageSquare},
+    { path: "/privacy",  label: "Privacy Policy", icon: Shield        },
+    { path: "/terms",    label: "Terms of Use",   icon: FileText      },
+    { path: "/help",     label: "Help Center",    icon: HelpCircle    },
+    { path: "/feedback", label: "Feedback",       icon: MessageSquare },
   ];
 
   const socialLinks = [
@@ -169,10 +199,10 @@ function Footer() {
               <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
                 {resourceLinks.map(({ path, label }) => (
                   <li key={path}>
-                    <Link to={path} className={`f-link${isActive(path) ? " active" : ""}`}>
+                    <NavLink to={path} className={`f-link${isActive(path) ? " active" : ""}`}>
                       <ChevronRight className="chevron" style={{ width: 12, height: 12, color: "#5b3ef5" }} />
                       {label}
-                    </Link>
+                    </NavLink>
                   </li>
                 ))}
               </ul>
@@ -184,10 +214,10 @@ function Footer() {
               <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
                 {companyLinks.map(({ path, label }) => (
                   <li key={path}>
-                    <Link to={path} className={`f-link${isActive(path) ? " active" : ""}`}>
+                    <NavLink to={path} className={`f-link${isActive(path) ? " active" : ""}`}>
                       <ChevronRight className="chevron" style={{ width: 12, height: 12, color: "#5b3ef5" }} />
                       {label}
-                    </Link>
+                    </NavLink>
                   </li>
                 ))}
               </ul>
@@ -199,10 +229,10 @@ function Footer() {
               <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
                 {legalLinks.map(({ path, label, icon: Icon }) => (
                   <li key={path}>
-                    <Link to={path} className={`f-link${isActive(path) ? " active" : ""}`}>
+                    <NavLink to={path} className={`f-link${isActive(path) ? " active" : ""}`}>
                       <Icon style={{ width: 13, height: 13, color: "#9d96c8", flexShrink: 0 }} />
                       {label}
-                    </Link>
+                    </NavLink>
                   </li>
                 ))}
               </ul>
@@ -229,9 +259,9 @@ function Footer() {
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
               {navLinks.map(({ path, label }) => (
-                <Link key={path} to={path} className={`f-bottom-link${isActive(path) ? " active" : ""}`}>
+                <NavLink key={path} to={path} className={`f-bottom-link${isActive(path) ? " active" : ""}`}>
                   {label}
-                </Link>
+                </NavLink>
               ))}
             </div>
           </div>
@@ -240,7 +270,7 @@ function Footer() {
         {/* ══ MOBILE (<md) ══ */}
         <div className="md:hidden">
 
-          {/* Brand row — unchanged */}
+          {/* Brand row */}
           <div style={{ padding: "18px 16px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1.5px solid #ece9f8" }}>
             <Link to="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
               <img src="/logop.png" alt="SMART InterviewAi Logo" style={{ width: 32, height: 32, borderRadius: 9, objectFit: "contain", boxShadow: "0 2px 8px rgba(91,62,245,.18)" }} />
@@ -264,17 +294,17 @@ function Footer() {
             </div>
           </div>
 
-          {/* Nav pills 2×2 — unchanged */}
+          {/* Nav pills 2×2 */}
           <div style={{ padding: "12px 16px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             {navLinks.map(({ path, icon: NavIcon, label }) => (
-              <Link key={path} to={path} className={`f-nav-pill${isActive(path) ? " active" : ""}`}>
+              <NavLink key={path} to={path} className={`f-nav-pill${isActive(path) ? " active" : ""}`}>
                 <NavIcon style={{ width: 14, height: 14, flexShrink: 0 }} />
                 {label}
-              </Link>
+              </NavLink>
             ))}
           </div>
 
-          {/* ── ADDED: 3 link columns ── */}
+          {/* 3 link columns */}
           <div style={{ padding: "16px 16px 12px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, borderTop: "1.5px solid #ece9f8" }}>
 
             {/* Quick Links */}
@@ -283,10 +313,10 @@ function Footer() {
               <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
                 {resourceLinks.map(({ path, label }) => (
                   <li key={path}>
-                    <Link to={path} className={`f-link${isActive(path) ? " active" : ""}`} style={{ fontSize: 12 }}>
+                    <NavLink to={path} className={`f-link${isActive(path) ? " active" : ""}`} style={{ fontSize: 12 }}>
                       <ChevronRight className="chevron" style={{ width: 10, height: 10, color: "#5b3ef5" }} />
                       {label}
-                    </Link>
+                    </NavLink>
                   </li>
                 ))}
               </ul>
@@ -298,10 +328,10 @@ function Footer() {
               <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
                 {companyLinks.map(({ path, label }) => (
                   <li key={path}>
-                    <Link to={path} className={`f-link${isActive(path) ? " active" : ""}`} style={{ fontSize: 12 }}>
+                    <NavLink to={path} className={`f-link${isActive(path) ? " active" : ""}`} style={{ fontSize: 12 }}>
                       <ChevronRight className="chevron" style={{ width: 10, height: 10, color: "#5b3ef5" }} />
                       {label}
-                    </Link>
+                    </NavLink>
                   </li>
                 ))}
               </ul>
@@ -313,10 +343,10 @@ function Footer() {
               <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
                 {legalLinks.map(({ path, label, icon: Icon }) => (
                   <li key={path}>
-                    <Link to={path} className={`f-link${isActive(path) ? " active" : ""}`} style={{ fontSize: 12 }}>
+                    <NavLink to={path} className={`f-link${isActive(path) ? " active" : ""}`} style={{ fontSize: 12 }}>
                       <Icon style={{ width: 11, height: 11, color: "#9d96c8", flexShrink: 0 }} />
                       {label}
-                    </Link>
+                    </NavLink>
                   </li>
                 ))}
               </ul>

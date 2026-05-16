@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
+import HomeNav from "../components/HomeNav";
 import Footer from "../components/Footer";
 
 // ── EmailJS config — fill these from your EmailJS dashboard ──────────────────
@@ -169,7 +169,7 @@ export default function ContactPage() {
     <>
       <style>{CONTACT_STYLES}</style>
       <div className="contact-page">
-        <Navbar />
+       <HomeNav />
         <main style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 20px 80px" }}>
 
           {/* ── Hero ── */}

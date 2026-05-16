@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
+import HomeNav from "../components/HomeNav";
 import Footer from "../components/Footer";
 
 const EMAILJS_SERVICE_ID           = import.meta.env.VITE_EMAILJS_SERVICE_ID            || "YOUR_SERVICE_ID";
@@ -410,7 +410,7 @@ export default function FeedbackPage() {
     <>
       <style>{STYLES}</style>
       <div className="fp">
-        <Navbar />
+        <HomeNav />
         <main className="fp-wrap">
 
           {/* ── Hero ── */}
