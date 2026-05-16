@@ -5,7 +5,6 @@
 import { useUser } from "@clerk/clerk-react";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
-import Navbar from "../components/Navbar";
 import {
   BookOpen, CheckCircle, Target, Play, Zap, Star,
   Flame, Brain, RefreshCw, Sparkles, ChevronDown, ChevronRight,
@@ -476,7 +475,7 @@ export default function SyllabusPage() {
   });
 
   if (loadingProfile) return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50"><Navbar />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
       <div className="flex items-center justify-center h-[calc(100vh-80px)]">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
@@ -488,7 +487,7 @@ export default function SyllabusPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
-      <Navbar />
+      
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Header */}

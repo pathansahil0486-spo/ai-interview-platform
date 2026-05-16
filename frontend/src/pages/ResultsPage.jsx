@@ -2,7 +2,6 @@ import { useUser } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
 import {
   ArrowLeft, Download, Star, TrendingUp,
   CheckCircle, Clock, Award, BarChart3, Loader,
@@ -102,7 +101,7 @@ function ResultsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <Navbar />
+        
         <div className="flex items-center justify-center h-[calc(100vh-80px)]">
           <div className="text-center">
             <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
@@ -116,7 +115,7 @@ function ResultsPage() {
   if (!results) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <Navbar />
+        
         <div className="flex items-center justify-center h-[calc(100vh-80px)]">
           <div className="text-center">
             <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
@@ -132,7 +131,7 @@ function ResultsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
+      
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Header */}

@@ -2,7 +2,6 @@ import { useUser } from "@clerk/clerk-react";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
 import {
   BookOpen, Video, FileText, Clock, Star, Search,
   Bookmark, Share2, Loader, ExternalLink,
@@ -1072,7 +1071,7 @@ export default function PreparationPage() {
 
   if (loading) return (
     <div className="min-h-screen bg-[#f7f8fc]">
-      <Navbar />
+      
       <div className="flex items-center justify-center h-[calc(100vh-70px)]">
         <div className="text-center space-y-4">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center mx-auto animate-pulse">
@@ -1087,7 +1086,7 @@ export default function PreparationPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f8fc]">
-      <Navbar />
+      
       <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-4 sm:space-y-6">
 
         {/* ── Hero Banner ─────────────────────────────────────────────── */}

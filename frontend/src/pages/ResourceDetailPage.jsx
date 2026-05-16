@@ -2,7 +2,6 @@ import { useUser } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
 import {
   ArrowLeft, Bookmark, Share2, Download, Loader, ExternalLink,
   Clock, Star, Tag, BookOpen, Video, FileText, Zap, Target,
@@ -164,7 +163,7 @@ function ResourceDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f7f8fc]">
-        <Navbar />
+        
         <div className="flex items-center justify-center h-[calc(100vh-70px)]">
           <div className="text-center space-y-3">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center mx-auto animate-pulse">
@@ -185,7 +184,7 @@ function ResourceDetailPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f8fc]">
-      <Navbar />
+      
 
       {/* Reading Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-0.5 bg-gray-200 z-50">

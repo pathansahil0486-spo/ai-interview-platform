@@ -2,7 +2,6 @@ import { useUser } from "@clerk/clerk-react";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
 import CreateInterviewModal from "../components/CreateInterviewModal";
 import {
   Plus, Search, Calendar, Clock, CheckCircle, Play, MoreVertical,
@@ -261,7 +260,7 @@ function InterviewsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f7f8fc]">
-        <Navbar />
+        
         <div className="flex items-center justify-center h-[calc(100vh-70px)]">
           <div className="text-center space-y-3">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center mx-auto animate-pulse">
@@ -278,7 +277,7 @@ function InterviewsPage() {
     <>
       <style>{CARD_STYLES}</style>
       <div className="min-h-screen bg-[#f7f8fc]">
-        <Navbar />
+        
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
           {/* Header */}

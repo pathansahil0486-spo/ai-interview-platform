@@ -3,7 +3,6 @@ import { useUser } from "@clerk/clerk-react";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
 import {
   User, Mail, Calendar, TrendingUp, Target, Edit3, Save, X,
   BarChart3, Clock, BookOpen, Settings, Bell, Shield, HelpCircle,
@@ -453,7 +452,7 @@ export default function ProfilePage() {
 
   if (loading || !profileData) return (
     <div className="min-h-screen bg-[#f4f5fa]">
-      <Navbar />
+      
       <div className="flex items-center justify-center h-[calc(100vh-70px)]">
         <div className="text-center">
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center mx-auto mb-4 animate-pulse">
@@ -478,7 +477,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#f4f5fa]">
-      <Navbar />
+      
 
       {/* Top hero card */}
       <div className="bg-white border-b border-gray-100">

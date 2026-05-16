@@ -2,7 +2,6 @@ import { useUser } from "@clerk/clerk-react";
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
 import {
   ArrowLeft,
   ArrowRight,
@@ -235,7 +234,7 @@ function InterviewSessionPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <Navbar />
+        
         <div className="flex items-center justify-center h-[calc(100vh-80px)]">
           <div className="text-center">
             <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
@@ -249,7 +248,7 @@ function InterviewSessionPage() {
   if (!interview) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <Navbar />
+        
         <div className="flex items-center justify-center h-[calc(100vh-80px)]">
           <div className="text-center">
             <HelpCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -272,7 +271,7 @@ function InterviewSessionPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
+      
 
       {/* Progress Bar */}
       <div className="bg-white border-b">

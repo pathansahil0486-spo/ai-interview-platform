@@ -5,7 +5,6 @@ import { useUser } from "@clerk/clerk-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
 import {
   Clock, ChevronLeft, ChevronRight, CheckCircle, AlertCircle,
   Send, Loader, Trophy, BarChart3, TrendingUp, BookOpen,
@@ -287,7 +286,7 @@ export default function AssessmentPage() {
   // ── Intro ───────────────────────────────────────────────────────────────────
   if (phase === "intro" && assessment) return (
     <div className="min-h-screen bg-gray-950 text-white">
-      <Navbar/>
+      
       <div className="max-w-2xl mx-auto px-4 py-16">
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 bg-blue-600/20 border border-blue-500/30 rounded-full px-4 py-1.5 mb-4">
@@ -562,7 +561,7 @@ export default function AssessmentPage() {
 
     return (
       <div className="min-h-screen bg-gray-950 text-white">
-        <Navbar/>
+        
         <div className="max-w-4xl mx-auto px-4 py-10">
 
           {/* Score hero */}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { SignInButton, useAuth, useClerk } from "@clerk/clerk-react";
+import { useAuth, useClerk } from "@clerk/clerk-react";
+import { useNavigate } from "react-router";
 import {
   Sparkles, Target, Zap, Shield, Users, TrendingUp, CheckCircle,
   ArrowRight, Brain, MessageSquare, BarChart, GraduationCap,
@@ -209,6 +210,37 @@ function useHomeData() {
   return { stats, testimonials, loading };
 }
 
+/* ─── SmartCTA ───
+   Signed-in  → navigate to /dashboard
+   Signed-out → open Clerk sign-in modal
+─────────────────────────────────────── */
+function SmartCTA({ children, className, style, onMouseEnter, onMouseLeave, onClick }) {
+  const { isSignedIn } = useAuth();
+  const { openSignIn } = useClerk();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    onClick?.();
+    if (isSignedIn) {
+      navigate("/dashboard");
+    } else {
+      openSignIn();
+    }
+  };
+
+  return (
+    <button
+      className={className}
+      style={style}
+      onClick={handleClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      {children}
+    </button>
+  );
+}
+
 /* ─── IconBox ─── */
 function IconBox({ color, children, size = 52 }) {
   return (
@@ -248,7 +280,7 @@ function HomeNav() {
           {/* Logo */}
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
             <div style={{ width: 40, height: 40, borderRadius: 11, border: "1.5px solid #ece9f8", overflow: "hidden", boxShadow: "0 2px 10px rgba(91,62,245,.12)", flexShrink: 0 }}>
-                 <img src="/logo-new.png" alt="SMART InterviewAi Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src="/logo-new.png" alt="SMART InterviewAi Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
             <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
               <span style={{ fontWeight: 800, fontSize: 16, letterSpacing: "-0.3px", background: "linear-gradient(90deg,#5b3ef5,#a855f7,#ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -264,11 +296,9 @@ function HomeNav() {
             <a href="#how-it-works" className="hp-nav-link">How It Works</a>
             <a href="#who-its-for" className="hp-nav-link">Who It's For</a>
             <a href="#testimonials" className="hp-nav-link">Reviews</a>
-            <SignInButton mode="modal">
-              <button className="hp-btn-primary" style={{ padding: "10px 22px", fontSize: 14, borderRadius: 11 }}>
-                <Zap style={{ width: 15, height: 15 }} /> Get Started Free
-              </button>
-            </SignInButton>
+            <SmartCTA className="hp-btn-primary" style={{ padding: "10px 22px", fontSize: 14, borderRadius: 11 }}>
+              <Zap style={{ width: 15, height: 15 }} /> Get Started Free
+            </SmartCTA>
           </div>
 
           {/* Mobile: hamburger */}
@@ -299,15 +329,13 @@ function HomeNav() {
             </a>
           ))}
           <div style={{ marginTop: 4, paddingTop: 12, borderTop: "1.5px solid #ece9f8" }}>
-            <SignInButton mode="modal">
-              <button
-                className="hp-btn-primary"
-                style={{ width: "100%", justifyContent: "center", borderRadius: 12, fontSize: 14 }}
-                onClick={() => setMenuOpen(false)}
-              >
-                <Zap style={{ width: 15, height: 15 }} /> Get Started Free
-              </button>
-            </SignInButton>
+            <SmartCTA
+              className="hp-btn-primary"
+              style={{ width: "100%", justifyContent: "center", borderRadius: 12, fontSize: 14 }}
+              onClick={() => setMenuOpen(false)}
+            >
+              <Zap style={{ width: 15, height: 15 }} /> Get Started Free
+            </SmartCTA>
           </div>
         </div>
       )}
@@ -364,13 +392,11 @@ function HeroSection({ stats, loading }) {
         </p>
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", alignItems: "center", marginBottom: 64 }}>
-          <SignInButton mode="modal">
-            <button className="hp-btn-primary">
-              <Zap style={{ width: 17, height: 17 }} />
-              Start Practicing Free
-              <ArrowRight style={{ width: 15, height: 15 }} />
-            </button>
-          </SignInButton>
+          <SmartCTA className="hp-btn-primary">
+            <Zap style={{ width: 17, height: 17 }} />
+            Start Practicing Free
+            <ArrowRight style={{ width: 15, height: 15 }} />
+          </SmartCTA>
           <a href="#how-it-works" className="hp-btn-outline">
             <Play style={{ width: 14, height: 14 }} /> See How It Works
           </a>
@@ -425,11 +451,9 @@ function WhoItsFor() {
                 </li>
               ))}
             </ul>
-            <SignInButton mode="modal">
-              <button style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: "#5b3ef5", fontWeight: 700, fontSize: 14 }}>
-                Start as Student <ChevronRight style={{ width: 15, height: 15 }} />
-              </button>
-            </SignInButton>
+            <SmartCTA style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: "#5b3ef5", fontWeight: 700, fontSize: 14, padding: 0 }}>
+              Start as Student <ChevronRight style={{ width: 15, height: 15 }} />
+            </SmartCTA>
           </div>
 
           {/* Professional */}
@@ -450,11 +474,9 @@ function WhoItsFor() {
                 </li>
               ))}
             </ul>
-            <SignInButton mode="modal">
-              <button style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: "#a855f7", fontWeight: 700, fontSize: 14 }}>
-                Start as Professional <ChevronRight style={{ width: 15, height: 15 }} />
-              </button>
-            </SignInButton>
+            <SmartCTA style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: "#a855f7", fontWeight: 700, fontSize: 14, padding: 0 }}>
+              Start as Professional <ChevronRight style={{ width: 15, height: 15 }} />
+            </SmartCTA>
           </div>
         </div>
       </div>
@@ -665,19 +687,18 @@ function CTASection() {
           Join thousands of students and professionals who are already practicing smarter.
           Free to start — no credit card required.
         </p>
-        <SignInButton mode="modal">
-          <button style={{
+        <SmartCTA
+          style={{
             display: "inline-flex", alignItems: "center", gap: 10,
             background: "#fff", color: "#5b3ef5", fontWeight: 800, fontSize: 16,
             padding: "16px 36px", borderRadius: 16, border: "none", cursor: "pointer",
             boxShadow: "0 8px 32px rgba(0,0,0,0.2)", transition: "transform .18s, box-shadow .18s",
           }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 14px 40px rgba(0,0,0,0.25)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.2)"; }}
-          >
-            <Zap style={{ width: 18, height: 18 }} /> Start Free Practice Now
-          </button>
-        </SignInButton>
+          onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 14px 40px rgba(0,0,0,0.25)"; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.2)"; }}
+        >
+          <Zap style={{ width: 18, height: 18 }} /> Start Free Practice Now
+        </SmartCTA>
       </div>
     </section>
   );
@@ -723,10 +744,10 @@ function HomeFooter() {
   ];
 
   const legalLinks = [
-    { path: "/privacy", label: "Privacy Policy", icon: Shield    },
-    { path: "/terms",   label: "Terms of Use",   icon: FileText  },
-    { path: "/help",    label: "Help Center",    icon: HelpCircle },
-    {path: "/feedback", label: "Feedback",       icon: MessageSquare },
+    { path: "/privacy",   label: "Privacy Policy", icon: Shield       },
+    { path: "/terms",     label: "Terms of Use",   icon: FileText     },
+    { path: "/help",      label: "Help Center",    icon: HelpCircle   },
+    { path: "/feedback",  label: "Feedback",       icon: MessageSquare },
   ];
 
   const socialLinks = [
@@ -747,7 +768,7 @@ function HomeFooter() {
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", width: "fit-content" }}>
               <div style={{ width: 44, height: 44, borderRadius: 12, border: "1.5px solid #ece9f8", overflow: "hidden", boxShadow: "0 2px 10px rgba(91,62,245,.12)" }}>
-                   <img src="/logo-new.png" alt="SMART InterviewAi Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src="/logo-new.png" alt="SMART InterviewAi Logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
               <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
                 <span style={{ fontWeight: 800, fontSize: 15, background: "linear-gradient(90deg,#5b3ef5,#a855f7,#ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -884,14 +905,17 @@ function HomeFooter() {
 
 /* ─── PAGE ─── */
 function HomePage() {
+  const { isSignedIn } = useAuth();
   const { stats, testimonials, loading } = useHomeData();
 
+  // When signed in, AppLayout (from App.jsx) provides Navbar + Footer
+  // When not signed in, render own HomeNav + HomeFooter
   return (
     <>
       <style>{GLOBAL_STYLES}</style>
       <div style={{ minHeight: "100vh", background: "#fff" }}>
-        <HomeNav />
-        <div style={{ paddingTop: 64 }}>
+        {!isSignedIn && <HomeNav />}
+        <div style={{ paddingTop: isSignedIn ? 0 : 64 }}>
           <HeroSection stats={stats} loading={loading} />
           <WhoItsFor />
           <Features />
@@ -899,7 +923,7 @@ function HomePage() {
           <Domains />
           <Testimonials testimonials={testimonials} loading={loading} />
           <CTASection />
-          <HomeFooter />
+          {!isSignedIn && <HomeFooter />}
         </div>
       </div>
     </>

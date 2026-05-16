@@ -2,7 +2,6 @@ import { useUser } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import Navbar from "../components/Navbar";
 import CreateInterviewModal from "../components/CreateInterviewModal";
 import {
   Plus, Briefcase, Clock, CheckCircle, TrendingUp, Calendar,
@@ -452,7 +451,7 @@ function DashboardPage() {
       <>
         <style>{STYLES}</style>
         <div className="dash-root" style={{ minHeight: "100vh", background: "var(--surface)" }}>
-          <Navbar />
+
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "calc(100vh - 70px)" }}>
             <div style={{ textAlign: "center" }}>
               <div style={{
@@ -475,7 +474,7 @@ function DashboardPage() {
     <>
       <style>{STYLES}</style>
       <div className="dash-root" style={{ minHeight: "100vh", background: "var(--surface)" }}>
-        <Navbar />
+
         <main className="dash-main" style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px 64px", display: "flex", flexDirection: "column", gap: 28 }}>
 
           <WelcomeBanner
