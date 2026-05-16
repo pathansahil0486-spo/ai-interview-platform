@@ -13,7 +13,6 @@ import {
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-/* ─── Google Fonts injection ─────────────────────────────────── */
 const fontLink = document.createElement("link");
 fontLink.rel = "stylesheet";
 fontLink.href = "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap";
@@ -36,7 +35,6 @@ const STYLES = `
   .dash-root * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
   .dash-root h1,h2,h3,.syne { font-family: 'Inter', sans-serif; }
 
-  /* ── shimmer badge ── */
   @keyframes shimmer {
     0%{background-position:200% center}
     100%{background-position:-200% center}
@@ -50,7 +48,6 @@ const STYLES = `
     background-clip: text;
   }
 
-  /* ── card hover lift ── */
   .card-lift {
     transition: transform 0.22s cubic-bezier(.34,1.56,.64,1), box-shadow 0.22s ease;
   }
@@ -59,7 +56,6 @@ const STYLES = `
     box-shadow: 0 12px 40px rgba(91,62,245,.10);
   }
 
-  /* ── pill tabs ── */
   .tab-pill {
     transition: background 0.18s, color 0.18s;
     border-radius: 99px;
@@ -67,21 +63,15 @@ const STYLES = `
     border: none;
     background: transparent;
   }
-  .tab-pill.active {
-    background: #5b3ef5;
-    color: #fff;
-  }
+  .tab-pill.active { background: #5b3ef5; color: #fff; }
   .tab-pill:not(.active):hover { background: #f0eeff; color: #5b3ef5; }
 
-  /* ── row hover ── */
   .irow:hover { background: #f7f5ff; }
   .irow:hover .irow-title { color: #5b3ef5; }
 
-  /* ── score bar ── */
   @keyframes barGrow { from {width:0} to {width:var(--w)} }
   .score-bar-fill { animation: barGrow .8s cubic-bezier(.22,1,.36,1) forwards; }
 
-  /* ── fade up ── */
   @keyframes fadeUp {
     from { opacity:0; transform: translateY(14px); }
     to   { opacity:1; transform: translateY(0); }
@@ -92,7 +82,6 @@ const STYLES = `
   .fade-up-3 { animation-delay:.19s }
   .fade-up-4 { animation-delay:.26s }
 
-  /* ── noise overlay ── */
   .noise::after {
     content:'';
     position:absolute;inset:0;
@@ -100,18 +89,89 @@ const STYLES = `
     pointer-events:none;border-radius:inherit;
   }
 
-  /* ── interview row mobile fix ── */
-  @media (max-width: 600px) {
-    .irow { flex-wrap: wrap; gap: 10px !important; padding: 14px 16px !important; }
-    .irow-content { min-width: 0; flex: 1 1 0; }
-    .irow-title { white-space: normal !important; word-break: break-word; }
-    .irow-meta { flex-wrap: wrap; gap: 8px !important; }
-    .irow-badge { flex-shrink: 0; }
-    .irow-action { width: 100%; justify-content: center !important; margin-top: 2px; }
+  /* ── RESPONSIVE ── */
+
+  /* Interview row */
+  .irow {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: background .15s;
+    cursor: default;
   }
+
+  @media (max-width: 480px) {
+    .irow {
+      flex-wrap: wrap;
+      gap: 10px !important;
+      padding: 14px 14px !important;
+    }
+    .irow-content { min-width: 0; flex: 1 1 0; }
+    .irow-title { white-space: normal !important; word-break: break-word; font-size: 13px !important; }
+    .irow-meta { flex-wrap: wrap; gap: 6px !important; }
+    .irow-badge { flex-shrink: 0; }
+    .irow-action { width: 100% !important; justify-content: center !important; margin-top: 4px; }
+  }
+
+  /* Metric grid */
+  @media (max-width: 480px) {
+    .metric-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  }
+  @media (max-width: 320px) {
+    .metric-grid { grid-template-columns: 1fr !important; }
+  }
+
+  /* Personalized section */
+  @media (max-width: 900px) {
+    .personalized-grid { grid-template-columns: 1fr !important; }
+  }
+
+  /* Welcome banner */
+  @media (max-width: 600px) {
+    .welcome-inner { flex-direction: column !important; gap: 20px !important; }
+    .welcome-title { font-size: 24px !important; }
+    .welcome-btns { flex-direction: row !important; width: 100%; }
+    .welcome-btns button { flex: 1; justify-content: center !important; }
+    .welcome-banner { padding: 24px 18px !important; }
+    .score-bar-wrap { flex-wrap: wrap; gap: 8px !important; }
+  }
+  @media (max-width: 380px) {
+    .welcome-title { font-size: 20px !important; }
+    .welcome-banner { padding: 18px 14px !important; }
+    .welcome-btns { flex-direction: column !important; }
+    .welcome-btns button { width: 100% !important; }
+  }
+
+  /* Tab pills */
+  @media (max-width: 480px) {
+    .tab-pills-wrap { gap: 2px !important; }
+    .tab-pill { padding: 6px 10px !important; font-size: 11px !important; }
+    .sessions-header { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+  }
+
+  /* Main padding */
+  @media (max-width: 480px) {
+    .dash-main { padding: 16px 12px 56px !important; gap: 16px !important; }
+  }
+  @media (max-width: 320px) {
+    .dash-main { padding: 12px 8px 56px !important; }
+  }
+
+  /* Focus/prep cards */
+  @media (max-width: 480px) {
+    .focus-card { padding: 16px 14px !important; }
+  }
+
+  /* Badge row in welcome */
+  @media (max-width: 380px) {
+    .badge-row { flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; }
+    .badge-row span { font-size: 11px !important; }
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
 `;
 
-// ── Student-specific syllabus map ─────────────────────────────────────────────
 const STUDENT_SYLLABUS = {
   "10th": {
     focusAreas: ["Mathematics", "Science", "English Grammar", "General Knowledge"],
@@ -317,7 +377,6 @@ const EXPERIENCE_LABEL = {
   lead: "Lead / Principal (10+yr)",
 };
 
-// ── Main Dashboard ─────────────────────────────────────────────────────────────
 function DashboardPage() {
   const { user } = useUser();
   const navigate = useNavigate();
@@ -383,7 +442,7 @@ function DashboardPage() {
 
   const avgScore = Math.round(stats?.avgScore || 0);
   const performanceLevel =
-    avgScore >= 90 ? { label: "Expert",       emoji: "🏆", accent: "#00d4aa" }
+    avgScore >= 90 ? { label: "Expert",        emoji: "🏆", accent: "#00d4aa" }
     : avgScore >= 75 ? { label: "Advanced",    emoji: "⚡", accent: "#5b3ef5" }
     : avgScore >= 60 ? { label: "Intermediate",emoji: "🔥", accent: "#f5a623" }
     :                  { label: "Beginner",    emoji: "🌱", accent: "#e04aff" };
@@ -417,9 +476,8 @@ function DashboardPage() {
       <style>{STYLES}</style>
       <div className="dash-root" style={{ minHeight: "100vh", background: "var(--surface)" }}>
         <Navbar />
-        <main style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px 64px", display: "flex", flexDirection: "column", gap: 28 }}>
+        <main className="dash-main" style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 20px 64px", display: "flex", flexDirection: "column", gap: 28 }}>
 
-          {/* ── Welcome Banner ── */}
           <WelcomeBanner
             user={user}
             profile={profile}
@@ -431,19 +489,17 @@ function DashboardPage() {
             EXPERIENCE_LABEL={EXPERIENCE_LABEL}
           />
 
-          {/* ── Metric Cards ── */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 16 }}>
+          <div className="metric-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 16 }}>
             {[
-              { icon: BarChart3, label: "Avg Score",     value: `${avgScore}%`, sub: "Your performance",  accent: "#5b3ef5", bg: "#f0eeff" },
-              { icon: CheckCircle,label: "Completed",    value: stats?.completed || 0, sub: "Interviews done", accent: "#00d4aa", bg: "#e6fff8" },
-              { icon: Clock,      label: "Practice Time",value: `${Math.round((stats?.totalDuration||0)/60)}h`, sub: "Total hours", accent: "#f5a623", bg: "#fff7e6" },
-              { icon: Trophy,     label: "Level",        value: performanceLevel.label, sub: `${performanceLevel.emoji} Current rank`, accent: "#e04aff", bg: "#fdf0ff" },
+              { icon: BarChart3,  label: "Avg Score",     value: `${avgScore}%`,                                    sub: "Your performance",  accent: "#5b3ef5", bg: "#f0eeff" },
+              { icon: CheckCircle,label: "Completed",     value: stats?.completed || 0,                             sub: "Interviews done",   accent: "#00d4aa", bg: "#e6fff8" },
+              { icon: Clock,      label: "Practice Time", value: `${Math.round((stats?.totalDuration||0)/60)}h`,    sub: "Total hours",       accent: "#f5a623", bg: "#fff7e6" },
+              { icon: Trophy,     label: "Level",         value: performanceLevel.label,                            sub: `${performanceLevel.emoji} Current rank`, accent: "#e04aff", bg: "#fdf0ff" },
             ].map((m, i) => (
               <MetricCard key={i} {...m} delay={i * 0.07} />
             ))}
           </div>
 
-          {/* ── Personalized Section ── */}
           {syllabus && (
             <PersonalizedSection
               profile={profile}
@@ -454,18 +510,17 @@ function DashboardPage() {
             />
           )}
 
-          {/* ── Interview Sessions ── */}
+          {/* Interview Sessions */}
           <div style={{ background: "var(--card)", borderRadius: 20, border: "1.5px solid var(--border)", overflow: "hidden", boxShadow: "0 2px 16px rgba(15,14,23,.04)" }}>
-            {/* Header */}
-            <div style={{ padding: "20px 24px", borderBottom: "1.5px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+            <div className="sessions-header" style={{ padding: "20px 24px", borderBottom: "1.5px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
               <h2 className="syne" style={{ fontSize: 18, fontWeight: 700, color: "var(--ink)", margin: 0 }}>Interview Sessions</h2>
-              <div style={{ display: "flex", gap: 4, background: "#f3f2ff", padding: 4, borderRadius: 99 }}>
+              <div className="tab-pills-wrap" style={{ display: "flex", gap: 4, background: "#f3f2ff", padding: 4, borderRadius: 99 }}>
                 {["recent", "in-progress", "completed"].map((tab) => (
                   <button
                     key={tab}
                     className={`tab-pill ${activeTab === tab ? "active" : ""}`}
                     onClick={() => setActiveTab(tab)}
-                    style={{ padding: "7px 18px", fontSize: 13, fontWeight: 500, color: activeTab === tab ? "#fff" : "var(--muted)", fontFamily: "Inter, sans-serif" }}
+                    style={{ padding: "7px 14px", fontSize: 12, fontWeight: 500, color: activeTab === tab ? "#fff" : "var(--muted)", fontFamily: "Inter, sans-serif", whiteSpace: "nowrap" }}
                   >
                     {tab.replace("-", " ")}
                   </button>
@@ -508,60 +563,59 @@ function DashboardPage() {
   );
 }
 
-// ── Welcome Banner ─────────────────────────────────────────────────────────────
 function WelcomeBanner({ user, profile, stats, avgScore, performanceLevel, onNewInterview, navigate, EXPERIENCE_LABEL }) {
   const isStudent = profile?.userType === "student";
   const isJobseeker = profile?.userType === "jobseeker";
 
   return (
-    <div className="noise fade-up" style={{
+    <div className="noise fade-up welcome-banner" style={{
       position: "relative", overflow: "hidden",
       background: "linear-gradient(135deg, #0f0e17 0%, #1a1433 45%, #0d0c1a 100%)",
       borderRadius: 24, padding: "36px 40px",
       boxShadow: "0 20px 60px rgba(91,62,245,.22)",
     }}>
-      {/* Glow blobs */}
       <div style={{
-        position: "absolute", width: 380, height: 380, borderRadius: "50%",
+        position: "absolute", width: 280, height: 280, borderRadius: "50%",
         background: "radial-gradient(circle, rgba(91,62,245,.35) 0%, transparent 70%)",
-        top: -120, right: -80, pointerEvents: "none",
+        top: -80, right: -60, pointerEvents: "none",
       }} />
       <div style={{
-        position: "absolute", width: 260, height: 260, borderRadius: "50%",
+        position: "absolute", width: 200, height: 200, borderRadius: "50%",
         background: "radial-gradient(circle, rgba(224,74,255,.2) 0%, transparent 70%)",
-        bottom: -80, left: "30%", pointerEvents: "none",
+        bottom: -60, left: "30%", pointerEvents: "none",
       }} />
 
-      <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
+      <div className="welcome-inner" style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
         {/* Left */}
-        <div style={{ flex: 1, minWidth: 260 }}>
-          {/* Badges row */}
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 18 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="badge-row" style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
             {isStudent && (
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "5px 12px", borderRadius: 99,
+                padding: "5px 11px", borderRadius: 99,
                 background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)",
-                color: "#d6cfff", fontSize: 12, fontWeight: 500, backdropFilter: "blur(8px)",
+                color: "#d6cfff", fontSize: 12, fontWeight: 500,
               }}>
-                <GraduationCap style={{ width: 13, height: 13 }} />
+                <GraduationCap style={{ width: 12, height: 12 }} />
                 {profile?.studentClass}{profile?.stream ? ` · ${profile.stream}` : ""}
               </span>
             )}
             {isJobseeker && (
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "5px 12px", borderRadius: 99,
+                padding: "5px 11px", borderRadius: 99,
                 background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)",
                 color: "#d6cfff", fontSize: 12, fontWeight: 500,
               }}>
-                <Briefcase style={{ width: 13, height: 13 }} />
-                {profile?.domain} · {EXPERIENCE_LABEL[profile?.experienceLevel] || profile?.experienceLevel}
+                <Briefcase style={{ width: 12, height: 12 }} />
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 160 }}>
+                  {profile?.domain} · {EXPERIENCE_LABEL[profile?.experienceLevel] || profile?.experienceLevel}
+                </span>
               </span>
             )}
             <span style={{
               display: "inline-flex", alignItems: "center", gap: 5,
-              padding: "5px 12px", borderRadius: 99,
+              padding: "5px 11px", borderRadius: 99,
               background: `rgba(${performanceLevel.accent === "#00d4aa" ? "0,212,170" : performanceLevel.accent === "#5b3ef5" ? "91,62,245" : performanceLevel.accent === "#f5a623" ? "245,166,35" : "224,74,255"},.15)`,
               border: `1px solid ${performanceLevel.accent}40`,
               color: performanceLevel.accent, fontSize: 12, fontWeight: 600,
@@ -570,10 +624,10 @@ function WelcomeBanner({ user, profile, stats, avgScore, performanceLevel, onNew
             </span>
           </div>
 
-          <h1 className="syne" style={{ fontSize: 32, fontWeight: 800, color: "#fff", margin: "0 0 8px", lineHeight: 1.15 }}>
+          <h1 className="syne welcome-title" style={{ fontSize: 30, fontWeight: 800, color: "#fff", margin: "0 0 8px", lineHeight: 1.15, wordBreak: "break-word" }}>
             Hey, {user?.firstName || "there"}! 👋
           </h1>
-          <p style={{ color: "#9d96c8", fontSize: 15, margin: "0 0 24px", lineHeight: 1.6 }}>
+          <p style={{ color: "#9d96c8", fontSize: 14, margin: "0 0 20px", lineHeight: 1.6, maxWidth: 400 }}>
             {isStudent
               ? `You're on track with ${profile?.studentClass} prep. Keep the momentum going.`
               : isJobseeker
@@ -581,54 +635,53 @@ function WelcomeBanner({ user, profile, stats, avgScore, performanceLevel, onNew
               : "Ready to ace your next interview? Let's get to work."}
           </p>
 
-          {/* Score bar */}
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div style={{ flex: 1, height: 6, background: "rgba(255,255,255,.1)", borderRadius: 99, overflow: "hidden", maxWidth: 220 }}>
+          <div className="score-bar-wrap" style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ flex: 1, height: 6, background: "rgba(255,255,255,.1)", borderRadius: 99, overflow: "hidden", maxWidth: 200, minWidth: 80 }}>
               <div
                 className="score-bar-fill"
                 style={{
                   "--w": `${avgScore}%`,
                   height: "100%", borderRadius: 99,
-                  background: `linear-gradient(90deg, #5b3ef5, #e04aff)`,
+                  background: "linear-gradient(90deg, #5b3ef5, #e04aff)",
                   boxShadow: "0 0 10px #5b3ef580",
                 }}
               />
             </div>
-            <span style={{ color: "#fff", fontWeight: 700, fontSize: 20, fontFamily: "Syne, sans-serif" }}>{avgScore}%</span>
-            <span style={{ color: "#6b6880", fontSize: 13 }}>· {stats?.completed || 0} sessions</span>
+            <span style={{ color: "#fff", fontWeight: 700, fontSize: 18 }}>{avgScore}%</span>
+            <span style={{ color: "#6b6880", fontSize: 12 }}>· {stats?.completed || 0} sessions</span>
           </div>
         </div>
 
-        {/* Right: Action buttons */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {/* Buttons */}
+        <div className="welcome-btns" style={{ display: "flex", flexDirection: "column", gap: 10, flexShrink: 0 }}>
           <button
             onClick={() => navigate("/interviews")}
             style={{
-              display: "flex", alignItems: "center", gap: 8,
-              padding: "11px 22px", borderRadius: 14,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              padding: "11px 20px", borderRadius: 14,
               background: "rgba(255,255,255,.07)", border: "1.5px solid rgba(255,255,255,.15)",
-              color: "#d6cfff", fontSize: 14, fontWeight: 600, cursor: "pointer",
-              transition: "all .2s", fontFamily: "Inter, sans-serif",
+              color: "#d6cfff", fontSize: 13, fontWeight: 600, cursor: "pointer",
+              transition: "all .2s", fontFamily: "Inter, sans-serif", whiteSpace: "nowrap",
             }}
             onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.13)"}
             onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.07)"}
           >
-            <Briefcase style={{ width: 15, height: 15 }} /> All Sessions
+            <Briefcase style={{ width: 14, height: 14 }} /> All Sessions
           </button>
           <button
             onClick={onNewInterview}
             style={{
-              display: "flex", alignItems: "center", gap: 8,
-              padding: "11px 22px", borderRadius: 14,
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              padding: "11px 20px", borderRadius: 14,
               background: "linear-gradient(135deg,#5b3ef5,#9b6ff7)",
-              border: "none", color: "#fff", fontSize: 14, fontWeight: 700,
+              border: "none", color: "#fff", fontSize: 13, fontWeight: 700,
               cursor: "pointer", boxShadow: "0 6px 24px rgba(91,62,245,.45)",
-              transition: "all .2s", fontFamily: "Inter, sans-serif",
+              transition: "all .2s", fontFamily: "Inter, sans-serif", whiteSpace: "nowrap",
             }}
             onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 32px rgba(91,62,245,.55)"; }}
             onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 6px 24px rgba(91,62,245,.45)"; }}
           >
-            <Plus style={{ width: 15, height: 15 }} /> New Interview
+            <Plus style={{ width: 14, height: 14 }} /> New Interview
           </button>
         </div>
       </div>
@@ -636,7 +689,6 @@ function WelcomeBanner({ user, profile, stats, avgScore, performanceLevel, onNew
   );
 }
 
-// ── Metric Card ────────────────────────────────────────────────────────────────
 function MetricCard({ icon: Icon, label, value, sub, accent, bg, delay }) {
   return (
     <div
@@ -644,37 +696,36 @@ function MetricCard({ icon: Icon, label, value, sub, accent, bg, delay }) {
       style={{
         animationDelay: `${delay}s`,
         background: "var(--card)", borderRadius: 18,
-        border: "1.5px solid var(--border)", padding: "22px 20px",
+        border: "1.5px solid var(--border)", padding: "18px 16px",
         boxShadow: "0 2px 12px rgba(15,14,23,.04)",
       }}
     >
-      <div style={{ width: 40, height: 40, borderRadius: 12, background: bg, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-        <Icon style={{ width: 18, height: 18, color: accent }} />
+      <div style={{ width: 36, height: 36, borderRadius: 10, background: bg, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+        <Icon style={{ width: 16, height: 16, color: accent }} />
       </div>
-      <p className="syne" style={{ fontSize: 26, fontWeight: 800, color: "var(--ink)", margin: "0 0 3px", letterSpacing: "-0.5px" }}>{value}</p>
-      <p style={{ fontSize: 12, color: "var(--muted)", margin: 0, fontWeight: 500 }}>{sub}</p>
+      <p className="syne" style={{ fontSize: 22, fontWeight: 800, color: "var(--ink)", margin: "0 0 3px", letterSpacing: "-0.5px", wordBreak: "break-word" }}>{value}</p>
+      <p style={{ fontSize: 11, color: "var(--muted)", margin: 0, fontWeight: 500 }}>{sub}</p>
     </div>
   );
 }
 
-// ── Personalized Section ───────────────────────────────────────────────────────
 function PersonalizedSection({ profile, syllabus, isStudent, onNewInterview, navigate }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
+    <div className="personalized-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
 
       {/* Focus Areas */}
-      <div className="card-lift" style={{ background: "var(--card)", borderRadius: 20, border: "1.5px solid var(--border)", padding: "22px 22px", boxShadow: "0 2px 12px rgba(15,14,23,.04)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-          <div style={{ width: 34, height: 34, borderRadius: 10, background: "#f0eeff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div className="card-lift focus-card" style={{ background: "var(--card)", borderRadius: 20, border: "1.5px solid var(--border)", padding: "22px 22px", boxShadow: "0 2px 12px rgba(15,14,23,.04)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+          <div style={{ width: 34, height: 34, borderRadius: 10, background: "#f0eeff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <Target style={{ width: 16, height: 16, color: "#5b3ef5" }} />
           </div>
-          <h3 className="syne" style={{ fontSize: 14, fontWeight: 700, color: "var(--ink)", margin: 0 }}>
+          <h3 className="syne" style={{ fontSize: 13, fontWeight: 700, color: "var(--ink)", margin: 0, lineHeight: 1.3 }}>
             {isStudent ? `${profile?.studentClass} Focus Areas` : `${profile?.domain} Focus`}
           </h3>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
           {(syllabus.focusAreas || []).map((area, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#5b3ef5", flexShrink: 0 }} />
               <span style={{ fontSize: 13, color: "var(--ink2)", fontWeight: 400 }}>{area}</span>
             </div>
@@ -683,21 +734,21 @@ function PersonalizedSection({ profile, syllabus, isStudent, onNewInterview, nav
       </div>
 
       {/* Prep Topics */}
-      <div className="card-lift" style={{ background: "var(--card)", borderRadius: 20, border: "1.5px solid var(--border)", padding: "22px 22px", boxShadow: "0 2px 12px rgba(15,14,23,.04)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-          <div style={{ width: 34, height: 34, borderRadius: 10, background: "#fdf0ff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div className="card-lift focus-card" style={{ background: "var(--card)", borderRadius: 20, border: "1.5px solid var(--border)", padding: "22px 22px", boxShadow: "0 2px 12px rgba(15,14,23,.04)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+          <div style={{ width: 34, height: 34, borderRadius: 10, background: "#fdf0ff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <BookOpen style={{ width: 16, height: 16, color: "#e04aff" }} />
           </div>
-          <h3 className="syne" style={{ fontSize: 14, fontWeight: 700, color: "var(--ink)", margin: 0 }}>Prep Topics</h3>
+          <h3 className="syne" style={{ fontSize: 13, fontWeight: 700, color: "var(--ink)", margin: 0 }}>Prep Topics</h3>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
           {(syllabus.prepTopics || []).map((topic, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <span style={{ fontSize: 13, color: "var(--ink2)" }}>{topic}</span>
+            <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6 }}>
+              <span style={{ fontSize: 13, color: "var(--ink2)", flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{topic}</span>
               <button
                 onClick={() => navigate("/preparation")}
                 style={{
-                  display: "flex", alignItems: "center", gap: 2,
+                  display: "flex", alignItems: "center", gap: 2, flexShrink: 0,
                   background: "none", border: "none", cursor: "pointer",
                   color: "#5b3ef5", fontSize: 12, fontWeight: 600, padding: "2px 6px",
                   borderRadius: 6, transition: "background .15s", fontFamily: "Inter, sans-serif",
@@ -705,7 +756,7 @@ function PersonalizedSection({ profile, syllabus, isStudent, onNewInterview, nav
                 onMouseEnter={e => e.currentTarget.style.background = "#f0eeff"}
                 onMouseLeave={e => e.currentTarget.style.background = "none"}
               >
-                Go <ChevronRight style={{ width: 12, height: 12 }} />
+                Go <ChevronRight style={{ width: 11, height: 11 }} />
               </button>
             </div>
           ))}
@@ -714,18 +765,17 @@ function PersonalizedSection({ profile, syllabus, isStudent, onNewInterview, nav
 
       {/* Quick Start + Tips */}
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        {/* Quick start card */}
         <div style={{
-          borderRadius: 20, padding: "20px 20px",
+          borderRadius: 20, padding: "18px 18px",
           background: "linear-gradient(135deg,#1a1433 0%,#0f0e17 100%)",
           border: "1.5px solid rgba(91,62,245,.25)",
           boxShadow: "0 4px 20px rgba(91,62,245,.15)",
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <Zap style={{ width: 16, height: 16, color: "#a899f7" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+            <Zap style={{ width: 15, height: 15, color: "#a899f7" }} />
             <span className="syne" style={{ fontWeight: 700, fontSize: 13, color: "#d6cfff" }}>Quick Start</span>
           </div>
-          <p style={{ fontSize: 11, color: "#6b6880", marginBottom: 12, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 11, color: "#6b6880", marginBottom: 10, lineHeight: 1.5 }}>
             {isStudent ? `Recommended for ${profile?.studentClass}` : `Curated for ${profile?.domain}`}
           </p>
           {(syllabus.recommendedInterviews || []).slice(0, 2).map((rec, i) => (
@@ -742,16 +792,15 @@ function PersonalizedSection({ profile, syllabus, isStudent, onNewInterview, nav
               onMouseEnter={e => e.currentTarget.style.background = "rgba(91,62,245,.2)"}
               onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.06)"}
             >
-              <span style={{ fontSize: 12, fontWeight: 500, color: "#d6cfff" }}>{rec}</span>
-              <ChevronRight style={{ width: 13, height: 13, color: "#6b6880" }} />
+              <span style={{ fontSize: 12, fontWeight: 500, color: "#d6cfff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{rec}</span>
+              <ChevronRight style={{ width: 12, height: 12, color: "#6b6880", flexShrink: 0 }} />
             </button>
           ))}
         </div>
 
-        {/* Tips card */}
-        <div className="card-lift" style={{ background: "var(--card)", borderRadius: 20, border: "1.5px solid var(--border)", padding: "18px 20px", boxShadow: "0 2px 12px rgba(15,14,23,.04)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-            <Star style={{ width: 15, height: 15, color: "#f5a623" }} />
+        <div className="card-lift" style={{ background: "var(--card)", borderRadius: 20, border: "1.5px solid var(--border)", padding: "16px 18px", boxShadow: "0 2px 12px rgba(15,14,23,.04)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+            <Star style={{ width: 14, height: 14, color: "#f5a623" }} />
             <span className="syne" style={{ fontWeight: 700, fontSize: 13, color: "var(--ink)" }}>Pro Tips</span>
           </div>
           {(syllabus.quickTips || []).slice(0, 3).map((tip, i) => (
@@ -766,32 +815,25 @@ function PersonalizedSection({ profile, syllabus, isStudent, onNewInterview, nav
   );
 }
 
-// ── Interview Row ──────────────────────────────────────────────────────────────
 function InterviewRow({ interview, onAction, getStatusColor, getStatusIcon, isLast }) {
   const s = getStatusColor(interview.status);
   return (
     <div
       className="irow"
       style={{
-        padding: "16px 24px",
         borderBottom: isLast ? "none" : "1.5px solid var(--border)",
-        display: "flex", alignItems: "center", gap: 16,
-        transition: "background .15s", cursor: "default",
       }}
     >
-      {/* Color bar */}
       <div style={{ width: 4, height: 36, borderRadius: 99, background: s.dot, flexShrink: 0 }} />
 
-      {/* ── Content — wraps on mobile ── */}
       <div className="irow-content" style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 5, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
           <p
             className="irow-title"
             style={{
               fontWeight: 600, color: "var(--ink)", fontSize: 14, margin: 0,
               overflow: "hidden", textOverflow: "ellipsis",
-              whiteSpace: "nowrap", maxWidth: "100%",
-              flex: "1 1 120px", minWidth: 0,
+              whiteSpace: "nowrap", flex: "1 1 100px", minWidth: 0,
               transition: "color .15s",
             }}
           >
@@ -809,7 +851,7 @@ function InterviewRow({ interview, onAction, getStatusColor, getStatusIcon, isLa
             {interview.status.replace("_", " ")}
           </span>
         </div>
-        <div className="irow-meta" style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+        <div className="irow-meta" style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
           <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "var(--muted)" }}>
             <Calendar style={{ width: 11, height: 11 }} />
             {new Date(interview.createdAt).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
@@ -823,13 +865,12 @@ function InterviewRow({ interview, onAction, getStatusColor, getStatusIcon, isLa
         </div>
       </div>
 
-      {/* ── Action button — full width on mobile ── */}
       <button
         className="irow-action"
         onClick={onAction}
         style={{
           display: "flex", alignItems: "center", gap: 7,
-          padding: "9px 18px", borderRadius: 12, border: "none", cursor: "pointer",
+          padding: "9px 16px", borderRadius: 12, border: "none", cursor: "pointer",
           background: interview.status === "completed" ? "#f0eeff" : "linear-gradient(135deg,#5b3ef5,#9b6ff7)",
           color: interview.status === "completed" ? "#5b3ef5" : "#fff",
           fontSize: 13, fontWeight: 700, flexShrink: 0,
@@ -847,12 +888,11 @@ function InterviewRow({ interview, onAction, getStatusColor, getStatusIcon, isLa
   );
 }
 
-// ── Empty State ────────────────────────────────────────────────────────────────
 function EmptyState({ onNewInterview }) {
   return (
-    <div style={{ padding: "56px 24px", textAlign: "center" }}>
+    <div style={{ padding: "48px 20px", textAlign: "center" }}>
       <div style={{
-        width: 64, height: 64, borderRadius: 20, margin: "0 auto 18px",
+        width: 64, height: 64, borderRadius: 20, margin: "0 auto 16px",
         background: "linear-gradient(135deg,#f0eeff,#fdf0ff)",
         border: "2px dashed #c4b8f7",
         display: "flex", alignItems: "center", justifyContent: "center",
@@ -860,7 +900,7 @@ function EmptyState({ onNewInterview }) {
         <Target style={{ width: 28, height: 28, color: "#a899f7" }} />
       </div>
       <p className="syne" style={{ fontSize: 17, fontWeight: 700, color: "var(--ink)", margin: "0 0 6px" }}>No interviews yet</p>
-      <p style={{ fontSize: 14, color: "var(--muted)", margin: "0 0 24px" }}>Start your first practice session to track progress</p>
+      <p style={{ fontSize: 14, color: "var(--muted)", margin: "0 0 22px" }}>Start your first practice session to track progress</p>
       <button
         onClick={onNewInterview}
         style={{
