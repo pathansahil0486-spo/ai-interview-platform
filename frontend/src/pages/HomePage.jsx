@@ -12,7 +12,6 @@ import {
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-const VIDEO_URL = "https://res.cloudinary.com/dqnkmytmk/video/upload/v1778961299/gwm1_avatar_622e2366-9d9b-42f9-bdae-6c982bdb03b1_juprru.mp4";
 const BG_VIDEO_URL = "https://res.cloudinary.com/dqnkmytmk/video/upload/q_auto/f_auto/v1779001848/6985525-uhd_3840_2160_25fps_h0d0hh.mp4";
 const CTA_VIDEO_URL = "https://res.cloudinary.com/dqnkmytmk/video/upload/q_auto/f_auto/v1779002770/6325286-uhd_2160_3840_24fps_agx6f1.mp4";
 
@@ -168,48 +167,6 @@ const GLOBAL_STYLES = `
   .hp-hamburger.open span:nth-child(2) { opacity: 0; }
   .hp-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
-  /* Video Modal */
-  .hp-video-modal-overlay {
-    position: fixed; inset: 0; z-index: 1000;
-    background: rgba(10,8,30,0.88);
-    backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-    animation: fadeInOverlay .22s ease;
-  }
-  @keyframes fadeInOverlay { from { opacity: 0 } to { opacity: 1 } }
-
-  .hp-video-modal-box {
-    position: relative;
-    width: 100%; max-width: 900px;
-    border-radius: 22px; overflow: hidden;
-    box-shadow: 0 40px 120px rgba(0,0,0,.7), 0 0 0 1.5px rgba(255,255,255,.1);
-    animation: scaleInModal .25s cubic-bezier(0.34,1.56,0.64,1);
-    background: #000;
-  }
-  @keyframes scaleInModal {
-    from { transform: scale(0.88); opacity: 0; }
-    to   { transform: scale(1);    opacity: 1; }
-  }
-
-  .hp-video-modal-close {
-    position: absolute; top: 14px; right: 14px; z-index: 10;
-    width: 38px; height: 38px; border-radius: 50%;
-    background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.25);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: #fff;
-    transition: background .18s, transform .18s;
-    backdrop-filter: blur(8px);
-  }
-  .hp-video-modal-close:hover { background: rgba(255,255,255,0.28); transform: scale(1.08); }
-
-  /* Hero background video */
-  .hp-hero-bg-video {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; opacity: 0.13; pointer-events: none;
-    z-index: 0;
-  }
-
   /* Watch Demo button pulse */
   @keyframes pulse-ring {
     0%   { transform: scale(1); opacity: 0.6; }
@@ -221,6 +178,40 @@ const GLOBAL_STYLES = `
     background: rgba(91,62,245,0.4);
     animation: pulse-ring 1.8s ease-out infinite;
   }
+
+  /* YouTube Modal */
+  .hp-yt-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(5,3,20,0.92);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeInOverlay .22s ease;
+  }
+  @keyframes fadeInOverlay { from { opacity: 0 } to { opacity: 1 } }
+  .hp-yt-box {
+    position: relative;
+    width: 100%; max-width: 920px;
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 40px 120px rgba(0,0,0,.8), 0 0 0 1.5px rgba(255,255,255,.08);
+    animation: scaleInModal .26s cubic-bezier(0.34,1.56,0.64,1);
+    background: #000;
+    aspect-ratio: 16/9;
+  }
+  @keyframes scaleInModal {
+    from { transform: scale(0.88); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+  .hp-yt-box iframe { width: 100%; height: 100%; border: none; display: block; }
+  .hp-yt-close {
+    position: absolute; top: -46px; right: 0;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #fff;
+    transition: background .18s, transform .18s;
+  }
+  .hp-yt-close:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
 `;
 
 /* ── Protected paths ── */
@@ -313,45 +304,32 @@ function Blob({ top, left, right, size = 400, color = "rgba(91,62,245,0.07)", bl
   );
 }
 
-/* ─── VIDEO MODAL ─── */
-function VideoModal({ onClose }) {
-  const videoRef = useRef(null);
-
-  // Close on Escape key
+/* ─── YOUTUBE MODAL ─── */
+function YouTubeModal({ onClose }) {
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handler);
+      document.body.style.overflow = "";
+    };
   }, [onClose]);
 
-  // Auto-play with sound when modal opens
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.muted = false;
-      videoRef.current.play().catch(() => {
-        // If browser blocks unmuted autoplay, just play muted
-        if (videoRef.current) {
-          videoRef.current.muted = true;
-          videoRef.current.play();
-        }
-      });
-    }
-  }, []);
-
   return (
-    <div className="hp-video-modal-overlay" onClick={onClose}>
-      <div className="hp-video-modal-box" onClick={e => e.stopPropagation()}>
-        <button className="hp-video-modal-close" onClick={onClose}>
-          <X style={{ width: 18, height: 18 }} />
+    <div className="hp-yt-overlay" onClick={onClose}>
+      <div style={{ position: "relative", width: "100%", maxWidth: 920 }} onClick={e => e.stopPropagation()}>
+        <button className="hp-yt-close" onClick={onClose}>
+          <X style={{ width: 16, height: 16 }} />
         </button>
-        <video
-          ref={videoRef}
-          src={VIDEO_URL}
-          controls
-          controlsList="nodownload"
-          onContextMenu={e => e.preventDefault()}
-          style={{ width: "100%", display: "block", maxHeight: "80vh", background: "#000" }}
-        />
+        <div className="hp-yt-box">
+          <iframe
+            src="https://www.youtube.com/embed/mtIUQhb2h3A?autoplay=1&rel=0&modestbranding=1"
+            title="SMART InterviewAi Demo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
       </div>
     </div>
   );
@@ -446,7 +424,6 @@ function HomeNav() {
 /* ─── HERO ─── */
 function HeroSection({ stats, loading }) {
   const [showModal, setShowModal] = useState(false);
-
   const statItems = [
     { value: "500+", label: "Happy Users" },
     {
@@ -466,98 +443,97 @@ function HeroSection({ stats, loading }) {
 
   return (
     <>
-      {showModal && <VideoModal onClose={() => setShowModal(false)} />}
-
+      {showModal && <YouTubeModal onClose={() => setShowModal(false)} />}
       <section style={{ position: "relative", overflow: "hidden", paddingTop: 120, paddingBottom: 96, background: "#0a0818" }}>
-        {/* Full background video */}
-        <video
-          src={BG_VIDEO_URL}
-          autoPlay
-          muted
-          loop
-          playsInline
-          style={{
-            position: "absolute", inset: 0, width: "100%", height: "100%",
-            objectFit: "cover", opacity: 1, pointerEvents: "none", zIndex: 0,
-          }}
-        />
+      {/* Full background video */}
+      <video
+        src={BG_VIDEO_URL}
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
+          position: "absolute", inset: 0, width: "100%", height: "100%",
+          objectFit: "cover", opacity: 1, pointerEvents: "none", zIndex: 0,
+        }}
+      />
 
-        {/* Dark gradient overlay so text stays readable */}
-        <div style={{
-          position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
-          background: "linear-gradient(135deg, rgba(10,8,30,0.72) 0%, rgba(30,12,60,0.65) 50%, rgba(10,8,30,0.75) 100%)",
-        }} />
+      {/* Dark gradient overlay so text stays readable */}
+      <div style={{
+        position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+        background: "linear-gradient(135deg, rgba(10,8,30,0.72) 0%, rgba(30,12,60,0.65) 50%, rgba(10,8,30,0.75) 100%)",
+      }} />
 
-        <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 20px", textAlign: "center", position: "relative", zIndex: 2 }}>
-          <div className="hp-tag" style={{ marginBottom: 28, background: "rgba(255,255,255,0.1)", border: "1.5px solid rgba(255,255,255,0.25)", color: "#e0d8ff" }}>
-            <Sparkles style={{ width: 14, height: 14 }} />
-            AI-Powered Mock Interviews · Personalized for Every Goal
-          </div>
-
-          <h1 style={{ fontSize: "clamp(36px, 7vw, 68px)", fontWeight: 900, lineHeight: 1.05, letterSpacing: "-1.5px", color: "#ffffff", marginBottom: 20 }}>
-            Land Your Dream Role
-            <br />
-            <span className="gradient-text">With AI Practice</span>
-          </h1>
-
-          <p style={{ fontSize: "clamp(15px, 2vw, 19px)", color: "rgba(220,210,255,0.85)", lineHeight: 1.75, maxWidth: 640, margin: "0 auto 40px", fontWeight: 400 }}>
-            Whether you're a student aiming for campus placements or a professional targeting FAANG —
-            get personalized AI interviews, instant feedback, and domain-specific preparation.
-          </p>
-
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", alignItems: "center", marginBottom: 64 }}>
-            <SmartCTA className="hp-btn-primary">
-              <Zap style={{ width: 17, height: 17 }} />
-              Start Practicing Free
-              <ArrowRight style={{ width: 15, height: 15 }} />
-            </SmartCTA>
-
-            {/* Watch Demo button */}
-            <button
-              onClick={() => setShowModal(true)}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 12,
-                background: "rgba(255,255,255,0.1)", color: "#ffffff", fontWeight: 700, fontSize: 15,
-                padding: "14px 24px", borderRadius: 14, border: "2px solid rgba(255,255,255,0.3)", cursor: "pointer",
-                transition: "background .18s, border-color .18s, color .18s",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.2)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)"; e.currentTarget.style.color = "#ffffff"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; e.currentTarget.style.color = "#ffffff"; }}
-            >
-              {/* Pulsing play circle */}
-              <span style={{ position: "relative", width: 34, height: 34, flexShrink: 0 }}>
-                <span className="hp-play-pulse" style={{ position: "absolute", inset: 0, borderRadius: "50%" }} />
-                <span style={{
-                  position: "relative", zIndex: 1,
-                  width: 34, height: 34, borderRadius: "50%",
-                  background: "linear-gradient(135deg,#5b3ef5,#a855f7)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  boxShadow: "0 4px 14px rgba(91,62,245,.4)",
-                }}>
-                  <Play style={{ width: 13, height: 13, color: "#fff", marginLeft: 2 }} />
-                </span>
-              </span>
-              Watch Demo
-            </button>
-          </div>
-
-          {/* Stats row */}
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "20px 40px" }}>
-            {statItems.map((s, i) => (
-              <div key={i} style={{ textAlign: "center" }}>
-                {s.value === null ? (
-                  <div className="hp-skeleton" style={{ height: 36, width: 80, marginBottom: 6, borderRadius: 8 }} />
-                ) : (
-                  <p style={{ fontSize: "clamp(22px, 4vw, 32px)", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.5px" }}>
-                    {s.value}
-                  </p>
-                )}
-                <p style={{ fontSize: 13, color: "rgba(200,190,255,0.75)", fontWeight: 500, marginTop: 2 }}>{s.label}</p>
-              </div>
-            ))}
-          </div>
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 20px", textAlign: "center", position: "relative", zIndex: 2 }}>
+        <div className="hp-tag" style={{ marginBottom: 28, background: "rgba(255,255,255,0.1)", border: "1.5px solid rgba(255,255,255,0.25)", color: "#e0d8ff" }}>
+          <Sparkles style={{ width: 14, height: 14 }} />
+          AI-Powered Mock Interviews · Personalized for Every Goal
         </div>
-      </section>
+
+        <h1 style={{ fontSize: "clamp(36px, 7vw, 68px)", fontWeight: 900, lineHeight: 1.05, letterSpacing: "-1.5px", color: "#ffffff", marginBottom: 20 }}>
+          Land Your Dream Role
+          <br />
+          <span className="gradient-text">With AI Practice</span>
+        </h1>
+
+        <p style={{ fontSize: "clamp(15px, 2vw, 19px)", color: "rgba(220,210,255,0.85)", lineHeight: 1.75, maxWidth: 640, margin: "0 auto 40px", fontWeight: 400 }}>
+          Whether you're a student aiming for campus placements or a professional targeting FAANG —
+          get personalized AI interviews, instant feedback, and domain-specific preparation.
+        </p>
+
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", alignItems: "center", marginBottom: 64 }}>
+          <SmartCTA className="hp-btn-primary">
+            <Zap style={{ width: 17, height: 17 }} />
+            Start Practicing Free
+            <ArrowRight style={{ width: 15, height: 15 }} />
+          </SmartCTA>
+
+          {/* Watch Demo button — opens YouTube modal */}
+          <button
+            onClick={() => setShowModal(true)}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 12,
+              background: "rgba(255,255,255,0.1)", color: "#ffffff", fontWeight: 700, fontSize: 15,
+              padding: "14px 24px", borderRadius: 14, border: "2px solid rgba(255,255,255,0.3)", cursor: "pointer",
+              transition: "background .18s, border-color .18s, color .18s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.2)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.6)"; e.currentTarget.style.color = "#ffffff"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; e.currentTarget.style.color = "#ffffff"; }}
+          >
+            {/* Pulsing play circle */}
+            <span style={{ position: "relative", width: 34, height: 34, flexShrink: 0 }}>
+              <span className="hp-play-pulse" style={{ position: "absolute", inset: 0, borderRadius: "50%" }} />
+              <span style={{
+                position: "relative", zIndex: 1,
+                width: 34, height: 34, borderRadius: "50%",
+                background: "linear-gradient(135deg,#5b3ef5,#a855f7)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: "0 4px 14px rgba(91,62,245,.4)",
+              }}>
+                <Play style={{ width: 13, height: 13, color: "#fff", marginLeft: 2 }} />
+              </span>
+            </span>
+            Watch Demo
+          </button>
+        </div>
+
+        {/* Stats row */}
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "20px 40px" }}>
+          {statItems.map((s, i) => (
+            <div key={i} style={{ textAlign: "center" }}>
+              {s.value === null ? (
+                <div className="hp-skeleton" style={{ height: 36, width: 80, marginBottom: 6, borderRadius: 8 }} />
+              ) : (
+                <p style={{ fontSize: "clamp(22px, 4vw, 32px)", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.5px" }}>
+                  {s.value}
+                </p>
+              )}
+              <p style={{ fontSize: 13, color: "rgba(200,190,255,0.75)", fontWeight: 500, marginTop: 2 }}>{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
     </>
   );
 }
