@@ -193,7 +193,7 @@ function PrivacyPolicy() {
                 boxShadow: "0 2px 10px rgba(91,62,245,.12)",
                 overflow: "hidden", flexShrink: 0,
               }}>
-                <img src="/logop.png" alt="SMART InterviewAi" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src="/logo-new.png" alt="SMART InterviewAi" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
               <div style={{ lineHeight: 1 }}>
                 <span style={{
